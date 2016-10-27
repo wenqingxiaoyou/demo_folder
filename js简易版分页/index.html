@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>js简易版分页</title>
+
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+        }
+        #div1{
+            position: absolute;
+            left:50%;
+            top:300px;
+            -webkit-transform: translate(-50%, 0);
+            -moz-transform: translate(-50%, 0);
+            -ms-transform: translate(-50%, 0);
+            -o-transform: translate(-50%, 0);
+            transform: translate(-50%, 0);
+
+        }
+        li{
+            list-style: none;
+        }
+        a{
+            margin:0 6px;
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+
+            page({
+                id: 'div1',
+                nowNum: 5,
+                allNum: 10,
+                callBack:function (now,all) {
+                    alert('当前页码:'+now+',总页数为:'+all);
+                }
+            })
+
+        };
+
+        function page(opt) {
+            if (!opt.id) {
+                return false
+            }
+
+            var obj = document.getElementById(opt.id);
+
+            var nowNum = opt.nowNum || 1;
+            var allNum = opt.allNum || 5;
+
+
+            var callBack = opt.callBack || function () {
+
+                    }
+
+            /*当前页码gte4和页面总数gte6的时候，添加首页*/
+            if(nowNum >= 4 && allNum >=6){
+
+                var oA = document.createElement('a');
+
+                oA.href = '#1';
+
+                oA.innerHTML = '首页';
+
+                obj.appendChild(oA);
+
+            }
+
+
+            /*添加上一页*/
+
+            if(nowNum >= 2){
+                var oA = document.createElement('a');
+                oA.href = '#' + (nowNum-1);
+                oA.innerHTML = '上一页';
+                obj.appendChild(oA);
+            }
+
+
+
+            /*当页面总数小于等于5*/
+
+            if(allNum <= 5){
+                for(var i = 1; i <= 5; i++){
+
+                    var oA = document.createElement('a');
+
+                    oA.href = '#' + i;
+
+                    if(nowNum == i){
+                        oA.innerHTML = i;
+                    }else{
+                        oA.innerHTML = '['+i+']';
+                    }
+
+                    obj.appendChild(oA);
+                }
+            }else{
+
+                /*当页数大于5时*/
+                for(var i = 1; i <= 5; i++){
+
+                    var oA = document.createElement('a');
+
+                    var currentNum = (nowNum - 3 + i);
+
+
+                    /*页数大于10，当页数为1或2的时候，做特殊处理*/
+                    if(nowNum == 1 || nowNum ==2){
+
+                        oA.href = '#' + i;
+
+                        if(nowNum == i){
+                            oA.innerHTML = i;
+                        }else{
+                            oA.innerHTML = '['+i+']';
+                        }
+
+                        obj.appendChild(oA);
+
+
+                        /*页数大于10，最后两页做特殊处理*/
+                    }else if((allNum - nowNum) == 0 || (allNum - nowNum) == 1){
+
+                        oA.href = '#' + (allNum - 5 + i);
+
+                        if((allNum - nowNum) == 0 && i == 5){
+                            oA.innerHTML = (allNum - 5 + i);
+                        }else if((allNum - nowNum) == 1 && i == 4){
+                            oA.innerHTML = (allNum - 5 + i);
+
+                        }else{
+                            oA.innerHTML = '['+(allNum - 5 + i)+']';
+
+                        }
+                        obj.appendChild(oA);
+                    }else{
+                        oA.href = '#' + currentNum;
+
+                        if(i == 3){
+
+                            oA.innerHTML = currentNum;
+
+                        }else{
+                            oA.innerHTML = '['+currentNum+']';
+                        }
+
+                        obj.appendChild(oA);
+                    }
+
+
+
+                }
+
+
+
+                /*添加下一页*/
+                if((allNum - nowNum)>= 1){
+                    var oA = document.createElement('a');
+                    oA.href = '#' + (nowNum+1);
+                    oA.innerHTML='下一页';
+                    obj.appendChild(oA);
+                }
+
+
+                /*添加尾页 */
+                if((allNum - nowNum)>= 3 &&　(allNum) >= 6){
+
+                    var oA =document.createElement('a');
+
+                    oA.href = '#' + allNum;
+
+                    oA.innerHTML = '尾页';
+
+                    obj.appendChild(oA);
+                }
+
+
+
+                callBack(nowNum,allNum);
+                /*给每个a添加点击事件*/
+                var aA = obj.getElementsByTagName('a');
+
+                for(var i = 0 ; i < aA.length; i++){
+                    aA[i].onclick = function () {
+
+//                        alert(this.getAttribute('href'));
+                        var nowNum =  parseInt(this.getAttribute('href').substring(1));
+
+                        obj.innerHTML = '';
+
+                        page({
+                            id:opt.id,
+                            nowNum:nowNum,
+                            allNum:allNum,
+                            callBack:callBack
+                        });
+//
+
+                        return false;
+                    }
+                }
+
+
+            }
+
+
+
+
+
+        }
+    </script>
+</head>
+<body>
+<div id="div1">
+    <!-- <a href="#1">首页</a>
+     <a href="#3">上一页</a>
+     <a href="#2">[2]</a>
+     <a href="#3">[3]</a>
+     <a href="#4">4</a>
+     <a href="#5">[5]</a>
+     <a href="#6">[6]</a>
+     <a href="#5">下一页</a>
+     <a href="#10">尾页</a>-->
+</div>
+
+</body>
+</html>
