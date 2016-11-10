@@ -1,0 +1,23 @@
+<div class="container">
+  <h2 class="text-center">My todos</h2>
+  <form role="form" ng-submit="addTodo()">
+    <div class="row">
+      <div class="input-group">
+        <input type="text" class="form-control" ng-model="addTodoThing" placeholder="What needs to be done?">
+        <span class="input-group-btn">
+          <input type="submit" value="Add" class="btn btn-primary">
+        </span>
+      </div>
+    </div>
+  </form>
+  <br>
+  <div sv-root sv-part="todos">
+    <p sv-element ng-repeat="todo in todos track by $index" class="input-group">
+      <input style="padding: 10px; cursor:move;" type="text" ng-model="todo" class="form-control">
+      <span class="input-group-btn">
+      <button class="btn btn-danger" ng-click="removeTodo($index)">x</button>
+    </span>
+    </p>
+  </div>
+
+</div>
